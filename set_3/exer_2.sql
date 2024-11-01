@@ -1,0 +1,11 @@
+WITH Needed AS(
+    SELECT TeacherID 
+    FROM MATERIAL_UPLOADED_BY_TEACHER M, VISUALIZATIONS V 
+    WHERE M.MatID = V.MatID AND M.Format = 'ZIP'
+    GROUP BY MatID, TeacherID 
+    HAVING SUM(VisualizationsNum)> 100;
+)
+SELECT Course, Date, COUNT(DISTINCT TeacherID), SUM(Minutes) 
+FROM TEACHER T, TEACHER_CONNECTIONS TC 
+WHERE T.TeacherID = TC.TeacherID AND T.TeacherID IN Needed 
+GROUP BY Course, Date;
